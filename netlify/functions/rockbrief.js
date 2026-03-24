@@ -334,7 +334,7 @@ async function runBrief(force = false) {
 const handler = async (event) => {
   // HTTP invocation
   if (event && event.httpMethod) {
-    const secret = process.env.BRIEF_SECRET;
+    const secret = process.env.ROCKBRIEF_SECRET;
     if (!secret || event.headers?.['x-brief-secret'] !== secret) {
       return {
         statusCode: 401,
