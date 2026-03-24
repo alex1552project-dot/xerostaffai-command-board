@@ -336,17 +336,7 @@ const handler = async (event) => {
   if (event && event.httpMethod) {
     const secret = process.env.ROCKBRIEF_SECRET;
     if (!secret || event.headers?.['x-brief-secret'] !== secret) {
-      return {
-        statusCode: 401,
-        body: JSON.stringify({
-          error: 'Unauthorized',
-          debug: {
-            secretEnvSet: !!secret,
-            headerReceived: event.headers?.['x-brief-secret'] ? 'yes' : 'no',
-            headerKeys: Object.keys(event.headers || {}),
-          },
-        }),
-      };
+      return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
     }
     const force = event.queryStringParameters?.force === '1';
     try {
