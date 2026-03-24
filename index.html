@@ -38,13 +38,13 @@ body{font-family:'Barlow',sans-serif;background:var(--surface);color:var(--tp);m
 .gbtn:hover{opacity:0.88;}
 .gerr{color:#f07a5a;font-size:12px;margin-top:10px;min-height:16px;}
 
-header{background:var(--navy);padding:0 1.75rem;display:flex;align-items:center;justify-content:space-between;height:62px;border-bottom:3px solid var(--orange);position:sticky;top:0;z-index:100;}
+header{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;min-height:72px;border-bottom:3px solid var(--orange);position:sticky;top:0;z-index:100;gap:2rem;}
 .logo-area{display:flex;align-items:center;gap:12px;}
 .lmark{width:36px;height:36px;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;color:#fff;flex-shrink:0;}
 .ltext{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:21px;color:#fff;}
 .ltext span{color:var(--orange);}
 .lsub{font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:0.11em;text-transform:uppercase;margin-top:1px;}
-.hright{display:flex;align-items:center;gap:16px;}
+.hright{display:flex;align-items:center;gap:16px;flex-shrink:0;}
 .livebadge{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.62);}
 .ldot{width:7px;height:7px;border-radius:50%;background:#2ecc8a;animation:blink 2s infinite;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
@@ -187,7 +187,7 @@ footer strong{color:var(--orange);}
 }
 /* ── Tab Navigation ── */
 .tab-nav{display:flex;gap:4px;}
-.tab-btn{background:transparent;border:none;color:rgba(255,255,255,0.55);font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;padding:8px 14px;border-radius:7px;cursor:pointer;transition:all 0.15s;}
+.tab-btn{background:transparent;border:none;color:rgba(255,255,255,0.55);font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;padding:7px 14px;border-radius:7px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
 .tab-btn:hover{color:#fff;background:rgba(255,255,255,0.1);}
 .tab-btn.active{background:var(--orange);color:#fff;}
 .tab-panel{display:none;}
@@ -231,7 +231,7 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
 
 <header>
   <div class="logo-area">
-    <div class="lmark" style="font-size:15px;">RB</div>
+    <div class="lmark" style="font-size:14px;width:32px;height:32px;border-radius:7px;">RB</div>
     <div>
       <div class="ltext">ROCKBRIEF <span>INTELLIGENCE</span></div>
       <div class="lsub" style="font-size:10px;color:rgba(255,255,255,0.45);letter-spacing:0.06em;">Texas Got Rocks / T&C Materials</div>
