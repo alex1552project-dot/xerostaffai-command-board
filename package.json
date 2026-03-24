@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "RockBrief — TGR Intelligence Dashboard",
   "dependencies": {
-    "mongodb": "^6.3.0"
+    "mongodb": "^6.3.0",
+    "@netlify/functions": "^2.0.0"
   }
 }

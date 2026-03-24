@@ -283,47 +283,73 @@ async function sendSMS(todayStr, narrative, metrics) {
   return await res.json();
 }
 
-// ── Main Handler ──────────────────────────────────────────────────────────────
-const handler = async () => {
+// ── Core Logic ────────────────────────────────────────────────────────────────
+async function runBrief(force = false) {
   console.log('[rockbrief] Starting morning brief generation...');
 
+  const data = await pullData();
+  const { existingBrief, todayStr, revenueToday, openQuotesCount, monthQuotesCount, deliveriesToday } = data;
+
+  if (existingBrief && !force) {
+    console.log(`[rockbrief] Brief already exists for ${todayStr}, skipping.`);
+    return { statusCode: 200, body: JSON.stringify({ skipped: true, date: todayStr }) };
+  }
+
+  const bufferPosts = await getBufferPostsCount();
+  const narrative = await generateNarrative(data, bufferPosts);
+
+  const metrics = { revenueToday, openQuotesCount, monthQuotesCount, deliveriesToday, bufferPosts };
+
+  const db = await getDb();
+  await saveBrief(db, todayStr, narrative, metrics);
+  console.log(`[rockbrief] Brief saved to daily_briefs for ${todayStr}`);
+
+  // Send email
   try {
-    const data = await pullData();
-    const { existingBrief, todayStr, revenueToday, openQuotesCount, monthQuotesCount, deliveriesToday } = data;
+    await sendEmail(todayStr, narrative, metrics);
+    console.log('[rockbrief] Email sent.');
+  } catch (err) {
+    console.error('[rockbrief] Email failed:', err.message);
+  }
 
-    if (existingBrief) {
-      console.log(`[rockbrief] Brief already exists for ${todayStr}, skipping.`);
-      return { statusCode: 200 };
+  // Send SMS
+  try {
+    await sendSMS(todayStr, narrative, metrics);
+    console.log('[rockbrief] SMS sent.');
+  } catch (err) {
+    console.error('[rockbrief] SMS failed:', err.message);
+  }
+
+  console.log('[rockbrief] Done.');
+  return {
+    statusCode: 200,
+    body: JSON.stringify({ ok: true, date: todayStr, narrative }),
+  };
+}
+
+// ── Handler — supports HTTP (test) + cron (scheduled) ─────────────────────────
+// HTTP: GET /.netlify/functions/rockbrief
+//   Requires header: x-brief-secret: <BRIEF_SECRET env var>
+//   Optional query param: ?force=1 to regenerate even if brief exists today
+const handler = async (event) => {
+  // HTTP invocation
+  if (event && event.httpMethod) {
+    const secret = process.env.BRIEF_SECRET;
+    if (!secret || event.headers?.['x-brief-secret'] !== secret) {
+      return { statusCode: 401, body: JSON.stringify({ error: 'Unauthorized' }) };
     }
-
-    const bufferPosts = await getBufferPostsCount();
-    const narrative = await generateNarrative(data, bufferPosts);
-
-    const metrics = { revenueToday, openQuotesCount, monthQuotesCount, deliveriesToday, bufferPosts };
-
-    const db = await getDb();
-    await saveBrief(db, todayStr, narrative, metrics);
-    console.log(`[rockbrief] Brief saved to daily_briefs for ${todayStr}`);
-
-    // Send email
+    const force = event.queryStringParameters?.force === '1';
     try {
-      await sendEmail(todayStr, narrative, metrics);
-      console.log('[rockbrief] Email sent.');
+      return await runBrief(force);
     } catch (err) {
-      console.error('[rockbrief] Email failed:', err.message);
+      console.error('[rockbrief] Fatal error:', err);
+      return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
     }
+  }
 
-    // Send SMS
-    try {
-      await sendSMS(todayStr, narrative, metrics);
-      console.log('[rockbrief] SMS sent.');
-    } catch (err) {
-      console.error('[rockbrief] SMS failed:', err.message);
-    }
-
-    console.log('[rockbrief] Done.');
-    return { statusCode: 200 };
-
+  // Cron invocation (no httpMethod)
+  try {
+    return await runBrief(false);
   } catch (err) {
     console.error('[rockbrief] Fatal error:', err);
     return { statusCode: 500 };
