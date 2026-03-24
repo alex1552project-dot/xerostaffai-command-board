@@ -38,7 +38,7 @@ body{font-family:'Barlow',sans-serif;background:var(--surface);color:var(--tp);m
 .gbtn:hover{opacity:0.88;}
 .gerr{color:#f07a5a;font-size:12px;margin-top:10px;min-height:16px;}
 
-header{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;min-height:72px;border-bottom:3px solid var(--orange);position:sticky;top:0;z-index:100;gap:2rem;}
+header{background:var(--navy);display:flex;flex-direction:column;border-bottom:3px solid var(--orange);position:sticky;top:0;z-index:100;}.header-top{width:100%;text-align:center;padding:9px 2rem 8px;background:rgba(0,0,0,0.18);font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;letter-spacing:0.18em;color:#fff;text-transform:uppercase;border-bottom:1px solid rgba(255,255,255,0.08);}.header-bottom{width:100%;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;min-height:60px;gap:2rem;}
 .logo-area{display:flex;align-items:center;gap:12px;}
 .lmark{width:36px;height:36px;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:17px;color:#fff;flex-shrink:0;}
 .ltext{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:21px;color:#fff;}
@@ -230,21 +230,23 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
 <div id="app" style="display:none;">
 
 <header>
-  <div class="logo-area">
-    <div class="lmark" style="font-size:14px;width:32px;height:32px;border-radius:7px;">RB</div>
-    <div>
-      <div class="ltext">ROCKBRIEF <span>INTELLIGENCE</span></div>
-      <div class="lsub" style="font-size:10px;color:rgba(255,255,255,0.45);letter-spacing:0.06em;">Texas Got Rocks / T&C Materials</div>
+  <div class="header-top">Texas Got Rocks &nbsp;/&nbsp; T&amp;C Materials, LLC</div>
+  <div class="header-bottom">
+    <div class="logo-area">
+      <div class="lmark" style="font-size:14px;width:32px;height:32px;border-radius:7px;">RB</div>
+      <div>
+        <div class="ltext">ROCKBRIEF <span>INTELLIGENCE</span></div>
+      </div>
     </div>
-  </div>
-  <div class="hright">
-    <nav class="tab-nav">
-      <button class="tab-btn active" onclick="showTab('brief',this)">Daily Brief</button>
-      <button class="tab-btn" onclick="showTab('social',this)">Social Pipeline</button>
-      <button class="tab-btn" onclick="showTab('ops',this)">Operations</button>
-      <button class="tab-btn" onclick="showTab('settings',this)">Settings</button>
-    </nav>
-    <div class="hts" id="ts"></div>
+    <div class="hright">
+      <nav class="tab-nav">
+        <button class="tab-btn active" onclick="showTab('brief',this)">Daily Brief</button>
+        <button class="tab-btn" onclick="showTab('social',this)">Social Pipeline</button>
+        <button class="tab-btn" onclick="showTab('ops',this)">Operations</button>
+        <button class="tab-btn" onclick="showTab('settings',this)">Settings</button>
+      </nav>
+      <div class="hts" id="ts"></div>
+    </div>
   </div>
 </header>
 
