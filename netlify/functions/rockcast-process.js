@@ -69,7 +69,52 @@ Write ONLY the caption and hashtags. No preamble, no explanation.`;
 }
 
 async function scheduleInBuffer(caption, assets) {
-  return { skipped: true, reason: 'Buffer integration pending' };
+  if (!process.env.BUFFER_API_KEY) {
+    return { skipped: true, reason: 'No Buffer API key' };
+  }
+
+  const profilesRes = await fetch('https://api.bufferapp.com/1/profiles.json', {
+    headers: { Authorization: `Bearer ${process.env.BUFFER_API_KEY}` }
+  });
+
+  const profilesText = await profilesRes.text();
+  let profiles;
+  try {
+    profiles = JSON.parse(profilesText);
+  } catch(e) {
+    return { skipped: true, reason: 'Buffer profiles parse error', raw: profilesText };
+  }
+
+  if (!Array.isArray(profiles) || profiles.length === 0) {
+    return { skipped: true, reason: 'No Buffer profiles found' };
+  }
+
+  const profileIds = profiles.map(p => p.id);
+  const primaryAsset = assets[0];
+
+  const params = new URLSearchParams();
+  params.append('text', caption);
+  profileIds.forEach((id, i) => params.append(`profile_ids[${i}]`, id));
+  params.append('media[link]', primaryAsset.url);
+  if (primaryAsset.resourceType === 'image') {
+    params.append('media[photo]', primaryAsset.url);
+  }
+
+  const res = await fetch('https://api.bufferapp.com/1/updates/create.json', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${process.env.BUFFER_API_KEY}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: params
+  });
+
+  const text = await res.text();
+  try {
+    return text ? JSON.parse(text) : { success: true };
+  } catch(e) {
+    return { raw: text };
+  }
 }
 
 exports.handler = async (event) => {
