@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RockCast Upload</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+    }
+
+    .logo {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: #f97316;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 32px;
+    }
+
+    .card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      padding: 24px;
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .drop-zone {
+      border: 2px dashed #333;
+      border-radius: 12px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: #f97316;
+      background: rgba(249,115,22,0.05);
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .drop-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .drop-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: #ccc;
+      margin-bottom: 6px;
+    }
+
+    .drop-hint {
+      font-size: 12px;
+      color: #555;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .preview-item {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      overflow: hidden;
+      position: relative;
+      background: #222;
+    }
+
+    .preview-item img,
+    .preview-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .preview-item .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: rgba(0,0,0,0.7);
+      border: none;
+      color: #fff;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .field {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    select, textarea, input[type="text"] {
+      width: 100%;
+      background: #111;
+      border: 1px solid #2a2a2a;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 15px;
+      padding: 12px 14px;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+
+    select:focus, textarea:focus, input[type="text"]:focus {
+      border-color: #f97316;
+    }
+
+    textarea {
+      resize: none;
+      height: 80px;
+    }
+
+    select option {
+      background: #1a1a1a;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 16px;
+      background: #f97316;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+      margin-top: 4px;
+    }
+
+    .btn:hover { background: #ea6a0a; }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .status {
+      margin-top: 20px;
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 500;
+      display: none;
+    }
+
+    .status.info { background: #1e2a3a; border: 1px solid #2a4a6a; color: #7ab8f5; }
+    .status.success { background: #1a2a1a; border: 1px solid #2a4a2a; color: #6fcf97; }
+    .status.error { background: #2a1a1a; border: 1px solid #4a2a2a; color: #f97316; }
+
+    .progress-bar {
+      height: 4px;
+      background: #222;
+      border-radius: 4px;
+      margin-top: 12px;
+      overflow: hidden;
+      display: none;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: #f97316;
+      border-radius: 4px;
+      transition: width 0.3s;
+      width: 0%;
+    }
+
+    .video-badge {
+      position: absolute;
+      bottom: 4px;
+      left: 4px;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="logo">Texas Got Rocks</div>
+  <h1>RockCast Upload</h1>
+  <p class="subtitle">Drop your shots — Rocky handles the rest</p>
+
+  <div class="card">
+
+    <div class="drop-zone" id="dropZone">
+      <input type="file" id="fileInput" accept="image/*,video/*" multiple />
+      <div class="drop-icon">📸</div>
+      <div class="drop-label">Tap to add photos or videos</div>
+      <div class="drop-hint">JPG, PNG, MP4, MOV — up to 100MB each</div>
+    </div>
+
+    <div class="preview-grid" id="previewGrid"></div>
+
+    <div class="field">
+      <label>Job Type</label>
+      <select id="jobType">
+        <option value="">Select a job type...</option>
+        <option value="delivery">Delivery in action</option>
+        <option value="materials">Materials on site</option>
+        <option value="before_after">Before & After</option>
+        <option value="crew">Crew at work</option>
+        <option value="equipment">Equipment / truck</option>
+        <option value="landscape">Finished landscape</option>
+        <option value="driveway">Driveway project</option>
+        <option value="other">Other</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label>Notes for Rocky (optional)</label>
+      <textarea id="notes" placeholder="e.g. 5 tons of decomposed granite in Magnolia, big backyard project..."></textarea>
+    </div>
+
+    <button class="btn" id="uploadBtn" onclick="handleUpload()">🚀 Send to RockCast</button>
+
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="status" id="status"></div>
+
+  </div>
+
+  <script>
+    const CLOUD_NAME = 'dsuszlso3';
+    const UPLOAD_PRESET = 'rockcast_unsigned'; // Create this in Cloudinary settings
+
+    let selectedFiles = [];
+
+    const fileInput = document.getElementById('fileInput');
+    const dropZone = document.getElementById('dropZone');
+    const previewGrid = document.getElementById('previewGrid');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const status = document.getElementById('status');
+    const progressBar = document.getElementById('progressBar');
+    const progressFill = document.getElementById('progressFill');
+
+    // Drag and drop
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      addFiles(Array.from(e.dataTransfer.files));
+    });
+
+    fileInput.addEventListener('change', () => {
+      addFiles(Array.from(fileInput.files));
+      fileInput.value = '';
+    });
+
+    function addFiles(files) {
+      const valid = files.filter(f => f.type.startsWith('image/') || f.type.startsWith('video/'));
+      selectedFiles = [...selectedFiles, ...valid];
+      renderPreviews();
+    }
+
+    function renderPreviews() {
+      previewGrid.innerHTML = '';
+      selectedFiles.forEach((file, i) => {
+        const item = document.createElement('div');
+        item.className = 'preview-item';
+        const url = URL.createObjectURL(file);
+        const isVideo = file.type.startsWith('video/');
+
+        item.innerHTML = isVideo
+          ? `<video src="${url}" muted playsinline></video><span class="video-badge">▶ Video</span>`
+          : `<img src="${url}" alt="preview" />`;
+
+        const removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-btn';
+        removeBtn.textContent = '✕';
+        removeBtn.onclick = () => { selectedFiles.splice(i, 1); renderPreviews(); };
+        item.appendChild(removeBtn);
+        previewGrid.appendChild(item);
+      });
+    }
+
+    function showStatus(msg, type) {
+      status.textContent = msg;
+      status.className = `status ${type}`;
+      status.style.display = 'block';
+    }
+
+    function setProgress(pct) {
+      progressBar.style.display = 'block';
+      progressFill.style.width = pct + '%';
+    }
+
+    async function uploadToCloudinary(file, index) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', UPLOAD_PRESET);
+      formData.append('folder', 'rockcast');
+      formData.append('tags', 'rockcast,tgr');
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!res.ok) throw new Error(`Upload failed for file ${index + 1}`);
+      return res.json();
+    }
+
+    async function handleUpload() {
+      if (selectedFiles.length === 0) {
+        showStatus('Please select at least one photo or video.', 'error');
+        return;
+      }
+
+      const jobType = document.getElementById('jobType').value;
+      const notes = document.getElementById('notes').value.trim();
+
+      uploadBtn.disabled = true;
+      setProgress(10);
+      showStatus('Uploading to Cloudinary...', 'info');
+
+      try {
+        // Upload all files to Cloudinary
+        const uploadResults = [];
+        for (let i = 0; i < selectedFiles.length; i++) {
+          setProgress(10 + Math.round((i / selectedFiles.length) * 50));
+          const result = await uploadToCloudinary(selectedFiles[i], i);
+          uploadResults.push({
+            url: result.secure_url,
+            publicId: result.public_id,
+            resourceType: result.resource_type,
+            format: result.format,
+            width: result.width,
+            height: result.height
+          });
+        }
+
+        setProgress(65);
+        showStatus('Rocky is writing your caption...', 'info');
+
+        // Call Netlify function to process
+        const response = await fetch('/api/rockcast-process', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            assets: uploadResults,
+            jobType,
+            notes,
+            uploadedAt: new Date().toISOString()
+          })
+        });
+
+        setProgress(90);
+
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Processing failed');
+
+        setProgress(100);
+        showStatus('🤠 RockCast is live! Rocky wrote the caption and it\'s queued in Buffer.', 'success');
+
+        // Reset
+        selectedFiles = [];
+        renderPreviews();
+        document.getElementById('jobType').value = '';
+        document.getElementById('notes').value = '';
+
+      } catch (err) {
+        showStatus('Error: ' + err.message, 'error');
+        setProgress(0);
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    }
+  </script>
+
+</body>
+</html>

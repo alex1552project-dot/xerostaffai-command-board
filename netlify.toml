@@ -5,3 +5,6 @@
 
 [functions."rockbrief"]
   schedule = "0 12 * * *"
+
+[functions."rockbrief-watchdog"]
+  schedule = "30 12 * * *"
