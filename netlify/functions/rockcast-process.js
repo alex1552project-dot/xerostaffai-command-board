@@ -113,7 +113,12 @@ async function scheduleInBuffer(caption, assets) {
     })
   });
 
-  return res.json();
+  const text = await res.text();
+  try {
+    return text ? JSON.parse(text) : { success: true };
+  } catch (e) {
+    return { raw: text };
+  }
 }
 
 exports.handler = async (event) => {
