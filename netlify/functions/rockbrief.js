@@ -356,4 +356,4 @@ const handler = async (event) => {
   }
 };
 
-exports.handler = schedule('0 11 * * *', handler);
+exports.handler = schedule('0 12 * * *', handler);

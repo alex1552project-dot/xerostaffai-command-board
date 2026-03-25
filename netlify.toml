@@ -4,4 +4,4 @@
   status = 200
 
 [functions."rockbrief"]
-  schedule = "0 11 * * *"
+  schedule = "0 12 * * *"
