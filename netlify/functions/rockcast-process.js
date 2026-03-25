@@ -69,56 +69,7 @@ Write ONLY the caption and hashtags. No preamble, no explanation.`;
 }
 
 async function scheduleInBuffer(caption, assets) {
-  if (!process.env.BUFFER_API_KEY) {
-    console.log('Buffer API key not set — skipping Buffer scheduling');
-    return { skipped: true };
-  }
-
-  // Get Buffer profiles
-  const profilesRes = await fetch('https://api.bufferapp.com/1/profiles.json', {
-    headers: { Authorization: `Bearer ${process.env.BUFFER_API_KEY}` }
-  });
-  const profiles = await profilesRes.json();
-
-  // Target Facebook, Instagram, Google Biz
-  const targetNetworks = ['facebook', 'instagram', 'googlebusiness'];
-  const targetProfiles = profiles.filter(p =>
-    targetNetworks.some(n => p.service.toLowerCase().includes(n))
-  );
-
-  if (targetProfiles.length === 0) {
-    return { skipped: true, reason: 'No matching Buffer profiles found' };
-  }
-
-  const profileIds = targetProfiles.map(p => p.id);
-
-  // Use first image/video as the media
-  const primaryAsset = assets[0];
-  const body = {
-    text: caption,
-    profile_ids: profileIds,
-    media: { link: primaryAsset.url, photo: primaryAsset.resourceType === 'image' ? primaryAsset.url : undefined }
-  };
-
-  const res = await fetch('https://api.bufferapp.com/1/updates/create.json', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${process.env.BUFFER_API_KEY}`,
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams({
-      text: caption,
-      ...Object.fromEntries(profileIds.map((id, i) => [`profile_ids[${i}]`, id])),
-      'media[link]': primaryAsset.url
-    })
-  });
-
-  const text = await res.text();
-  try {
-    return text ? JSON.parse(text) : { success: true };
-  } catch (e) {
-    return { raw: text };
-  }
+  return { skipped: true, reason: 'Buffer integration pending' };
 }
 
 exports.handler = async (event) => {
