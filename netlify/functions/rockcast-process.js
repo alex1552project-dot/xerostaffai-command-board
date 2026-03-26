@@ -83,7 +83,7 @@ async function scheduleInBuffer(caption, assets) {
         }
       }) {
         ... on IdeaResponse {
-          id
+          __typename
         }
       }
     }
