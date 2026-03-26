@@ -102,7 +102,7 @@ async function scheduleInBuffer(caption, assets) {
           text: ${JSON.stringify(caption)}${mediaBlock}
         }
       }) {
-        ... on Idea { id }
+        __typename
       }
     }
   `);
