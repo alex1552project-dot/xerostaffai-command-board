@@ -101,6 +101,7 @@ async function scheduleInBuffer(caption, assets) {
   });
 
   const text = await res.text();
+  console.log('Buffer response:', text);
   try {
     return text ? JSON.parse(text) : { success: true };
   } catch(e) {
