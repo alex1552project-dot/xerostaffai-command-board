@@ -105,22 +105,18 @@ async function scheduleInBuffer(caption, assets) {
   const ideaId = createResult?.data?.createIdea?.id;
   if (!ideaId) return { skipped: true, reason: 'No idea ID returned', raw: createResult };
 
-  // Step 2: Attach media via updateIdea
-  const mediaUrl = assets[0]?.url;
-  if (mediaUrl) {
-    await gqlFetch(`
-      mutation UpdateIdea {
-        updateIdea(input: {
-          id: ${JSON.stringify(ideaId)},
-          content: {
-            mediaUrls: ${JSON.stringify([mediaUrl])}
-          }
-        }) {
-          ... on Idea { id }
+  // Step 2: Introspect IdeaContentInput to find media field name
+  const introResult = await gqlFetch(`
+    {
+      __type(name: "IdeaContentInput") {
+        inputFields {
+          name
+          type { name kind ofType { name kind } }
         }
       }
-    `);
-  }
+    }
+  `);
+  console.log('IdeaContentInput fields:', JSON.stringify(introResult?.data?.__type?.inputFields));
 
   return { success: true, ideaId };
 }
