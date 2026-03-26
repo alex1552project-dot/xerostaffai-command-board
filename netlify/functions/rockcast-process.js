@@ -91,7 +91,7 @@ async function scheduleInBuffer(caption, assets) {
     }
   `;
 
-  const res = await fetch('https://api.bufferapp.com/graphql', {
+  const res = await fetch('https://api.buffer.com/graphql', {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${process.env.BUFFER_API_KEY}`,
