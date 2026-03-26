@@ -87,25 +87,14 @@ async function scheduleInBuffer(caption, assets) {
     return text ? JSON.parse(text) : {};
   };
 
-  const mediaUrl = assets[0]?.url;
-
-  const createResult = await gqlFetch(`
-    mutation CreateIdea {
-      createIdea(input: {
-        organizationId: "69c293d6cec903c5070c81c9",
-        content: {
-          title: "RockCast Post",
-          text: ${JSON.stringify(caption)},
-          media: ${JSON.stringify(mediaUrl ? [mediaUrl] : [])}
-        }
-      }) {
-        ... on Idea { id }
-      }
+  const introResult = await gqlFetch(`{
+    __type(name: "IdeaMediaInput") {
+      inputFields { name type { name kind ofType { name kind } } }
     }
-  `);
+  }`);
+  console.log('IdeaMediaInput fields:', JSON.stringify(introResult?.data?.__type?.inputFields));
 
-  const ideaId = createResult?.data?.createIdea?.id;
-  return { success: true, ideaId };
+  return { success: true };
 }
 
 exports.handler = async (event) => {
