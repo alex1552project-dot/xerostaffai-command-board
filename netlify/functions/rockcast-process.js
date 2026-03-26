@@ -73,7 +73,22 @@ async function scheduleInBuffer(caption, assets) {
     return { skipped: true, reason: 'No Buffer API key' };
   }
 
-  const query = `
+  const gqlFetch = async (query) => {
+    const res = await fetch('https://api.buffer.com/graphql', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.BUFFER_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ query })
+    });
+    const text = await res.text();
+    console.log('Buffer response:', text);
+    return text ? JSON.parse(text) : {};
+  };
+
+  // Step 1: Create the idea, get its ID
+  const createResult = await gqlFetch(`
     mutation CreateIdea {
       createIdea(input: {
         organizationId: "69c293d6cec903c5070c81c9",
@@ -82,27 +97,32 @@ async function scheduleInBuffer(caption, assets) {
           text: ${JSON.stringify(caption)}
         }
       }) {
-        __typename
+        ... on Idea { id }
       }
     }
-  `;
+  `);
 
-  const res = await fetch('https://api.buffer.com/graphql', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${process.env.BUFFER_API_KEY}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ query })
-  });
+  const ideaId = createResult?.data?.createIdea?.id;
+  if (!ideaId) return { skipped: true, reason: 'No idea ID returned', raw: createResult };
 
-  const text = await res.text();
-  console.log('Buffer response:', text);
-  try {
-    return text ? JSON.parse(text) : { success: true };
-  } catch(e) {
-    return { raw: text };
+  // Step 2: Attach media via updateIdea
+  const mediaUrl = assets[0]?.url;
+  if (mediaUrl) {
+    await gqlFetch(`
+      mutation UpdateIdea {
+        updateIdea(input: {
+          id: ${JSON.stringify(ideaId)},
+          content: {
+            mediaUrls: ${JSON.stringify([mediaUrl])}
+          }
+        }) {
+          ... on Idea { id }
+        }
+      }
+    `);
   }
+
+  return { success: true, ideaId };
 }
 
 exports.handler = async (event) => {
