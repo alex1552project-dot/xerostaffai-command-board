@@ -88,9 +88,10 @@ async function scheduleInBuffer(caption, assets) {
   };
 
   const mediaUrl = assets[0]?.url;
-  const captionWithMedia = mediaUrl
-    ? `${caption}\n\n📎 ${mediaUrl}`
-    : caption;
+  const mediaType = assets[0]?.resourceType === 'video' ? 'video' : 'image';
+  const mediaBlock = mediaUrl
+    ? `, media: [{ url: ${JSON.stringify(mediaUrl)}, type: ${mediaType} }]`
+    : '';
 
   const createResult = await gqlFetch(`
     mutation CreateIdea {
@@ -98,7 +99,7 @@ async function scheduleInBuffer(caption, assets) {
         organizationId: "69c293d6cec903c5070c81c9",
         content: {
           title: "RockCast Post",
-          text: ${JSON.stringify(captionWithMedia)}
+          text: ${JSON.stringify(caption)}${mediaBlock}
         }
       }) {
         __typename
