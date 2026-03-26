@@ -88,7 +88,7 @@ async function scheduleInBuffer(caption, assets) {
   };
 
   const mediaUrl = assets[0]?.url;
-  const mediaType = assets[0]?.resourceType === 'video' ? 'VIDEO' : 'IMAGE';
+  const mediaType = assets[0]?.resourceType === 'video' ? 'video' : 'image';
   const mediaBlock = mediaUrl
     ? `, media: [{ url: ${JSON.stringify(mediaUrl)}, type: ${mediaType} }]`
     : '';
