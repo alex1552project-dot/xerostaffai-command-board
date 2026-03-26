@@ -79,8 +79,7 @@ async function scheduleInBuffer(caption, assets) {
         organizationId: "69c293d6cec903c5070c81c9",
         content: {
           title: "RockCast Post",
-          text: ${JSON.stringify(caption)},
-          mediaUrls: ${JSON.stringify([assets[0].url])}
+          text: ${JSON.stringify(caption)}
         }
       }) {
         id
