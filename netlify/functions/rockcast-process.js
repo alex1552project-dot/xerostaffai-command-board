@@ -87,14 +87,28 @@ async function scheduleInBuffer(caption, assets) {
     return text ? JSON.parse(text) : {};
   };
 
-  const introResult = await gqlFetch(`{
-    __type(name: "IdeaMediaInput") {
-      inputFields { name type { name kind ofType { name kind } } }
-    }
-  }`);
-  console.log('IdeaMediaInput fields:', JSON.stringify(introResult?.data?.__type?.inputFields));
+  const mediaUrl = assets[0]?.url;
+  const mediaType = assets[0]?.resourceType === 'video' ? 'VIDEO' : 'IMAGE';
+  const mediaBlock = mediaUrl
+    ? `, media: [{ url: ${JSON.stringify(mediaUrl)}, type: ${mediaType} }]`
+    : '';
 
-  return { success: true };
+  const createResult = await gqlFetch(`
+    mutation CreateIdea {
+      createIdea(input: {
+        organizationId: "69c293d6cec903c5070c81c9",
+        content: {
+          title: "RockCast Post",
+          text: ${JSON.stringify(caption)}${mediaBlock}
+        }
+      }) {
+        ... on Idea { id }
+      }
+    }
+  `);
+
+  const ideaId = createResult?.data?.createIdea?.id;
+  return { success: true, ideaId };
 }
 
 exports.handler = async (event) => {
