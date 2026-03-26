@@ -82,7 +82,7 @@ async function scheduleInBuffer(caption, assets) {
           text: ${JSON.stringify(caption)}
         }
       }) {
-        idea {
+        ... on IdeaResponse {
           id
         }
       }
