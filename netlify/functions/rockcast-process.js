@@ -87,14 +87,16 @@ async function scheduleInBuffer(caption, assets) {
     return text ? JSON.parse(text) : {};
   };
 
-  // Step 1: Create the idea, get its ID
+  const mediaUrl = assets[0]?.url;
+
   const createResult = await gqlFetch(`
     mutation CreateIdea {
       createIdea(input: {
         organizationId: "69c293d6cec903c5070c81c9",
         content: {
           title: "RockCast Post",
-          text: ${JSON.stringify(caption)}
+          text: ${JSON.stringify(caption)},
+          media: ${JSON.stringify(mediaUrl ? [mediaUrl] : [])}
         }
       }) {
         ... on Idea { id }
@@ -103,21 +105,6 @@ async function scheduleInBuffer(caption, assets) {
   `);
 
   const ideaId = createResult?.data?.createIdea?.id;
-  if (!ideaId) return { skipped: true, reason: 'No idea ID returned', raw: createResult };
-
-  // Step 2: Introspect IdeaContentInput to find media field name
-  const introResult = await gqlFetch(`
-    {
-      __type(name: "IdeaContentInput") {
-        inputFields {
-          name
-          type { name kind ofType { name kind } }
-        }
-      }
-    }
-  `);
-  console.log('IdeaContentInput fields:', JSON.stringify(introResult?.data?.__type?.inputFields));
-
   return { success: true, ideaId };
 }
 
