@@ -214,9 +214,23 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
 /* ── RockCast Social Pipeline ── */
 .social-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:18px;}
 .rc-card{background:var(--white);border:0.5px solid var(--border);border-radius:var(--rl);overflow:hidden;display:flex;flex-direction:column;}
-.rc-thumb-wrap{position:relative;background:#000;height:160px;overflow:hidden;flex-shrink:0;}
+.rc-thumb-wrap{position:relative;background:#000;height:160px;overflow:hidden;flex-shrink:0;cursor:pointer;}
+.rc-thumb-wrap:hover .rc-thumb-hover{opacity:1;}
+.rc-thumb-hover{position:absolute;inset:0;background:rgba(0,0,0,0.38);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.18s;}
+.rc-thumb-hover-icon{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.92);display:flex;align-items:center;justify-content:center;font-size:18px;}
 .rc-thumb{width:100%;height:100%;object-fit:cover;display:block;}
 .rc-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--navy-dark);color:rgba(255,255,255,0.3);font-size:28px;}
+/* ── Lightbox ── */
+.lb{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;padding:20px;}
+.lb.open{display:flex;}
+.lb-inner{position:relative;max-width:90vw;max-height:88vh;display:flex;align-items:center;justify-content:center;}
+.lb-img{max-width:90vw;max-height:84vh;border-radius:10px;object-fit:contain;display:block;box-shadow:0 8px 40px rgba(0,0,0,0.6);}
+.lb-video{max-width:90vw;max-height:84vh;border-radius:10px;display:block;box-shadow:0 8px 40px rgba(0,0,0,0.6);}
+.lb-close{position:fixed;top:18px;right:22px;width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.15);border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1001;transition:background 0.15s;}
+.lb-close:hover{background:rgba(255,255,255,0.28);}
+.lb-caption{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,0.72));padding:24px 24px 20px;text-align:center;}
+.lb-caption-text{color:rgba(255,255,255,0.88);font-size:13px;line-height:1.6;max-width:600px;margin:0 auto;}
+.lb-play-icon{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;font-size:26px;pointer-events:none;}
 .rc-status-badge{position:absolute;top:8px;right:8px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:0.06em;}
 .rc-status-pending{background:rgba(0,0,0,0.6);color:#fff;}
 .rc-status-approved{background:var(--green);color:#fff;}
@@ -492,6 +506,14 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
   </div>
 
 </main>
+
+<!-- ── Lightbox ── -->
+<div class="lb" id="lb" onclick="closeLightbox(event)">
+  <button class="lb-close" onclick="closeLightbox()">&#x2715;</button>
+  <div class="lb-inner" id="lb-inner"></div>
+  <div class="lb-caption"><div class="lb-caption-text" id="lb-caption"></div></div>
+</div>
+
 <footer>Built by <strong>RockBrief</strong> &nbsp;·&nbsp; TGR Intelligence Dashboard &nbsp;·&nbsp; T&amp;C Materials, LLC</footer>
 </div>
 
@@ -564,13 +586,24 @@ async function loadSocial() {
   }
 }
 
+// Preview data store keyed by post _id
+const rcPreviewStore = {};
+
 function renderSocialCard(p) {
   const id = p._id;
   const status = p.publishStatus || 'pending';
   const thumb = p.assets && p.assets[0] ? p.assets[0].url : null;
+  const isVideo = p.assets && p.assets[0] && p.assets[0].resourceType === 'video';
+  const previewUrl = isVideo && thumb ? thumb.replace('/upload/', '/upload/f_mp4/') : thumb;
+  // Store preview data so onclick just passes the id
+  rcPreviewStore[id] = { url: previewUrl, type: isVideo ? 'video' : 'image', caption: p.caption || '' };
+  const hoverIcon = isVideo ? '▶️' : '🔍';
   const thumbHtml = thumb
     ? `<img class="rc-thumb" src="${thumb}" loading="lazy" onerror="this.style.display='none'">`
     : '<div class="rc-thumb-placeholder">🪨</div>';
+  const thumbWrap = thumb
+    ? `<div class="rc-thumb-wrap" onclick="openPreview('${id}')">${thumbHtml}<div class="rc-thumb-hover"><div class="rc-thumb-hover-icon">${hoverIcon}</div></div><span class="rc-status-badge rc-status-${status}">${status}</span></div>`
+    : `<div class="rc-thumb-wrap">${thumbHtml}<span class="rc-status-badge rc-status-${status}">${status}</span></div>`;
   const date = p.createdAt ? new Date(p.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
   const caption = (p.caption || '').substring(0, 120) + ((p.caption || '').length > 120 ? '…' : '');
   const plats = p.platforms || { fb: true, ig: true, yt: false };
@@ -581,9 +614,7 @@ function renderSocialCard(p) {
   const approveDis = isDone || status === 'approved' ? ' disabled' : '';
   const rejectDis  = isDone ? ' disabled' : '';
   return `<div class="rc-card" id="rc-card-${id}">` +
-    `<div class="rc-thumb-wrap">${thumbHtml}` +
-      `<span class="rc-status-badge rc-status-${status}">${status}</span>` +
-    '</div>' +
+    thumbWrap +
     '<div class="rc-body">' +
       '<div class="rc-meta">' +
         `<span class="rc-theme-badge">${p.theme || 'general'}</span>` +
@@ -630,6 +661,33 @@ async function togglePostPlatform(id, key, btn) {
 }
 
 // ── RockCast Settings ────────────────────────────────────────────────────────
+
+// ── Lightbox ─────────────────────────────────────────────────────────────────
+
+function openPreview(id) {
+  const data = rcPreviewStore[id];
+  if (!data || !data.url) return;
+  const inner = document.getElementById('lb-inner');
+  if (data.type === 'video') {
+    inner.innerHTML = `<video class="lb-video" src="${data.url}" controls autoplay playsinline></video>`;
+  } else {
+    inner.innerHTML = `<img class="lb-img" src="${data.url}">`;
+  }
+  document.getElementById('lb-caption').textContent = data.caption;
+  document.getElementById('lb').classList.add('open');
+  document.addEventListener('keydown', lbKeyHandler);
+}
+
+function closeLightbox(e) {
+  if (e && e.target !== document.getElementById('lb') && !e.target.classList.contains('lb-close')) return;
+  const lb = document.getElementById('lb');
+  lb.classList.remove('open');
+  const inner = document.getElementById('lb-inner');
+  inner.innerHTML = ''; // stop video playback
+  document.removeEventListener('keydown', lbKeyHandler);
+}
+
+function lbKeyHandler(e) { if (e.key === 'Escape') closeLightbox({ target: document.getElementById('lb') }); }
 
 let rcSettings = { platforms: { fb: true, ig: true, yt: false }, postsPerDay: 1, preferredTimes: ['09:00'], activeDays: 'mon-sat', autoPublish: false };
 
