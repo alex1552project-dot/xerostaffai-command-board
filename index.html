@@ -211,6 +211,69 @@ footer strong{color:var(--orange);}
 .ig-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.45);margin-bottom:3px;}
 .ig-val{font-size:13px;font-weight:600;color:#fff;}
 main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
+/* ── RockCast Social Pipeline ── */
+.social-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:18px;}
+.rc-card{background:var(--white);border:0.5px solid var(--border);border-radius:var(--rl);overflow:hidden;display:flex;flex-direction:column;}
+.rc-thumb-wrap{position:relative;background:#000;height:160px;overflow:hidden;flex-shrink:0;}
+.rc-thumb{width:100%;height:100%;object-fit:cover;display:block;}
+.rc-thumb-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--navy-dark);color:rgba(255,255,255,0.3);font-size:28px;}
+.rc-status-badge{position:absolute;top:8px;right:8px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:0.06em;}
+.rc-status-pending{background:rgba(0,0,0,0.6);color:#fff;}
+.rc-status-approved{background:var(--green);color:#fff;}
+.rc-status-rejected{background:var(--red);color:#fff;}
+.rc-status-published{background:var(--navy);color:#fff;}
+.rc-status-failed{background:var(--red);color:#fff;}
+.rc-body{padding:14px 16px;flex:1;display:flex;flex-direction:column;gap:10px;}
+.rc-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.rc-theme-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:20px;background:var(--orange-dim);color:var(--orange);text-transform:capitalize;}
+.rc-job{font-size:10px;color:var(--tm);text-transform:capitalize;}
+.rc-date{font-family:monospace;font-size:10px;color:var(--tm);margin-left:auto;}
+.rc-caption{font-size:12px;color:var(--ts);line-height:1.55;flex:1;}
+.rc-plats{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.rc-plat-label{font-size:10px;font-weight:600;color:var(--tm);text-transform:uppercase;letter-spacing:0.06em;margin-right:2px;}
+.rc-plat{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;border:1px solid;cursor:pointer;transition:all 0.15s;}
+.rc-plat.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+.rc-plat.off{background:transparent;color:var(--tm);border-color:var(--border);}
+.rc-plat:disabled{cursor:not-allowed;opacity:0.5;}
+.rc-actions{display:flex;gap:8px;margin-top:4px;}
+.rc-btn{flex:1;padding:8px;border:none;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;transition:all 0.15s;font-family:'Barlow',sans-serif;}
+.rc-btn-approve{background:var(--green);color:#fff;}
+.rc-btn-approve:hover{opacity:0.88;}
+.rc-btn-reject{background:var(--surface2);color:var(--ts);}
+.rc-btn-reject:hover{background:var(--rbg);color:var(--red);}
+.rc-btn:disabled{opacity:0.4;cursor:not-allowed;}
+/* ── RockCast Settings section ── */
+.rc-settings{background:var(--white);border:0.5px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-top:2rem;}
+.rc-settings-hdr{padding:13px 18px 11px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.rc-settings-body{padding:20px 18px;display:grid;gap:20px;}
+.rc-field{display:flex;flex-direction:column;gap:6px;}
+.rc-field-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--tm);}
+.rc-seg{display:flex;gap:4px;flex-wrap:wrap;}
+.rc-seg-btn{background:var(--surface2);color:var(--ts);border:0.5px solid var(--border);border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;font-family:'Barlow',sans-serif;}
+.rc-seg-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.rc-time-grid{display:flex;gap:6px;flex-wrap:wrap;}
+.rc-time-btn{background:var(--surface2);color:var(--ts);border:0.5px solid var(--border);border-radius:7px;padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;font-family:'Barlow',sans-serif;}
+.rc-time-btn.active{background:var(--orange);color:#fff;border-color:var(--orange);}
+.rc-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border-radius:var(--r);}
+.rc-toggle-label{font-size:13px;font-weight:500;color:var(--tp);}
+.rc-toggle-sub{font-size:11px;color:var(--tm);}
+.rc-toggle{position:relative;width:44px;height:24px;cursor:pointer;}
+.rc-toggle input{opacity:0;width:0;height:0;position:absolute;}
+.rc-toggle-track{position:absolute;inset:0;border-radius:12px;background:var(--border);transition:background 0.2s;}
+.rc-toggle input:checked + .rc-toggle-track{background:var(--green);}
+.rc-toggle-thumb{position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.rc-toggle input:checked ~ .rc-toggle-thumb{left:23px;}
+.rc-plat-toggles{display:flex;gap:8px;flex-wrap:wrap;}
+.rc-plat-toggle{display:flex;align-items:center;gap:8px;padding:8px 14px;background:var(--surface);border-radius:var(--r);cursor:pointer;}
+.rc-plat-toggle input{opacity:0;width:0;height:0;position:absolute;}
+.rc-plat-toggle-name{font-size:12px;font-weight:600;color:var(--ts);min-width:28px;}
+.rc-save-btn{padding:10px 24px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif;}
+.rc-save-btn:hover{opacity:0.88;}
+.rc-saved-msg{font-size:11px;color:var(--green);font-weight:600;opacity:0;transition:opacity 0.3s;}
+@media(max-width:768px){
+  .social-grid{grid-template-columns:1fr;}
+  .rc-plat-toggles{flex-direction:column;}
+}
 
 </style>
 </head>
@@ -288,14 +351,9 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
         <span class="card-title">Social Pipeline</span>
         <span class="live-tag" id="social-count"></span>
       </div>
-      <table>
-        <thead><tr>
-          <th>Date</th><th>Theme</th><th>Caption Preview</th><th>Channels</th><th>Status</th>
-        </tr></thead>
-        <tbody id="social-tbody">
-          <tr><td colspan="5" style="text-align:center;color:var(--tm);padding:32px;">Loading...</td></tr>
-        </tbody>
-      </table>
+      <div class="social-grid" id="social-grid">
+        <div style="grid-column:1/-1;text-align:center;color:var(--tm);padding:48px;font-size:14px;">Loading...</div>
+      </div>
     </div>
   </div>
 
@@ -343,6 +401,94 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
       <div><div class="ig-label">Database</div><div class="ig-val">MongoDB Atlas · gotrocks</div></div>
       <div><div class="ig-label">Brand</div><div class="ig-val">Texas Got Rocks / T&amp;C Materials, LLC</div></div>
     </div>
+
+    <!-- ── RockCast Settings ── -->
+    <div class="rc-settings">
+      <div class="rc-settings-hdr">
+        <span class="card-title">RockCast Publishing Settings</span>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <span class="rc-saved-msg" id="rc-saved-msg">Saved!</span>
+          <button class="rc-save-btn" onclick="saveRockCastSettings()">Save Settings</button>
+        </div>
+      </div>
+      <div class="rc-settings-body">
+
+        <!-- Platforms -->
+        <div class="rc-field">
+          <div class="rc-field-label">Platforms</div>
+          <div class="rc-plat-toggles">
+            <label class="rc-plat-toggle">
+              <input type="checkbox" id="rc-plat-fb" onchange="toggleRcPlatform()">
+              <span class="rc-toggle-track"></span>
+              <span class="rc-plat-toggle-name">Facebook</span>
+            </label>
+            <label class="rc-plat-toggle">
+              <input type="checkbox" id="rc-plat-ig" onchange="toggleRcPlatform()">
+              <span class="rc-toggle-track"></span>
+              <span class="rc-plat-toggle-name">Instagram</span>
+            </label>
+            <label class="rc-plat-toggle">
+              <input type="checkbox" id="rc-plat-yt" onchange="toggleRcPlatform()">
+              <span class="rc-toggle-track"></span>
+              <span class="rc-plat-toggle-name">YouTube</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Posts Per Day -->
+        <div class="rc-field">
+          <div class="rc-field-label">Posts Per Day</div>
+          <div class="rc-seg" id="rc-ppd-seg">
+            <button class="rc-seg-btn" onclick="setRcSeg('ppd',1,this)">1</button>
+            <button class="rc-seg-btn" onclick="setRcSeg('ppd',2,this)">2</button>
+            <button class="rc-seg-btn" onclick="setRcSeg('ppd',3,this)">3</button>
+          </div>
+        </div>
+
+        <!-- Preferred Times (CST) -->
+        <div class="rc-field">
+          <div class="rc-field-label">Preferred Post Times (CST)</div>
+          <div class="rc-time-grid" id="rc-times-grid">
+            <button class="rc-time-btn" onclick="toggleRcTime('07:00',this)">7 AM</button>
+            <button class="rc-time-btn" onclick="toggleRcTime('08:00',this)">8 AM</button>
+            <button class="rc-time-btn" onclick="toggleRcTime('09:00',this)">9 AM</button>
+            <button class="rc-time-btn" onclick="toggleRcTime('10:00',this)">10 AM</button>
+            <button class="rc-time-btn" onclick="toggleRcTime('11:00',this)">11 AM</button>
+            <button class="rc-time-btn" onclick="toggleRcTime('12:00',this)">12 PM</button>
+            <button class="rc-time-btn" onclick="toggleRcTime('13:00',this)">1 PM</button>
+            <button class="rc-time-btn" onclick="toggleRcTime('14:00',this)">2 PM</button>
+            <button class="rc-time-btn" onclick="toggleRcTime('15:00',this)">3 PM</button>
+            <button class="rc-time-btn" onclick="toggleRcTime('16:00',this)">4 PM</button>
+            <button class="rc-time-btn" onclick="toggleRcTime('17:00',this)">5 PM</button>
+            <button class="rc-time-btn" onclick="toggleRcTime('18:00',this)">6 PM</button>
+          </div>
+        </div>
+
+        <!-- Active Days -->
+        <div class="rc-field">
+          <div class="rc-field-label">Active Days</div>
+          <div class="rc-seg" id="rc-days-seg">
+            <button class="rc-seg-btn" onclick="setRcSeg('days','mon-fri',this)">Mon–Fri</button>
+            <button class="rc-seg-btn" onclick="setRcSeg('days','mon-sat',this)">Mon–Sat</button>
+            <button class="rc-seg-btn" onclick="setRcSeg('days','mon-sun',this)">Every Day</button>
+          </div>
+        </div>
+
+        <!-- Auto-Publish -->
+        <div class="rc-toggle-row">
+          <div>
+            <div class="rc-toggle-label">Auto-Publish</div>
+            <div class="rc-toggle-sub">Automatically publish approved posts at configured times</div>
+          </div>
+          <label class="rc-toggle">
+            <input type="checkbox" id="rc-auto-publish" onchange="toggleRcAutoPublish()">
+            <span class="rc-toggle-track"></span>
+            <span class="rc-toggle-thumb"></span>
+          </label>
+        </div>
+
+      </div>
+    </div>
   </div>
 
 </main>
@@ -371,7 +517,7 @@ function showTab(name, btn) {
 }
 
 function loadAllData() {
-  loadBrief(); loadMetrics(); loadSocial(); loadOps(); loadEnvStatus();
+  loadBrief(); loadMetrics(); loadSocial(); loadOps(); loadEnvStatus(); loadRockCastSettings();
 }
 
 async function loadBrief() {
@@ -406,23 +552,162 @@ async function loadSocial() {
   try {
     const r = await fetch('/api/rockbrief-data?type=social');
     const d = await r.json();
-    const tbody = document.getElementById('social-tbody');
+    const grid = document.getElementById('social-grid');
     if (!d.posts || !d.posts.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--tm);padding:32px;">No posts in the pipeline yet.</td></tr>';
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--tm);padding:48px;font-size:14px;">No posts in the pipeline yet.</div>';
       return;
     }
-    document.getElementById('social-count').textContent = d.posts.length+' posts';
-    tbody.innerHTML = d.posts.map(p => {
-      const channels = [p.fb&&'FB',p.ig&&'IG',p.gbp&&'GBP'].filter(Boolean).join(' · ')||'—';
-      const caption = (p.caption||'').substring(0,60)+((p.caption||'').length>60?'…':'');
-      const date = p.scheduledDate ? new Date(p.scheduledDate).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
-      const sCls = p.status==='posted'?'p-live':'p-off';
-      const sStyle = p.status==='failed'?'style="background:var(--rbg);color:var(--red)"':'';
-      return '<tr><td class="atime">'+date+'</td><td><span class="pill t-o">'+(p.theme||'—')+'</span></td><td style="color:var(--ts);font-size:12px;">'+(caption||'—')+'</td><td style="color:var(--tm);font-size:12px;">'+channels+'</td><td><span class="pill '+sCls+'" '+sStyle+'>'+(p.status||'draft')+'</span></td></tr>';
-    }).join('');
+    document.getElementById('social-count').textContent = d.posts.length + ' posts';
+    grid.innerHTML = d.posts.map(p => renderSocialCard(p)).join('');
   } catch(e) {
-    document.getElementById('social-tbody').innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--red);padding:24px;">Error loading posts.</td></tr>';
+    document.getElementById('social-grid').innerHTML = '<div style="grid-column:1/-1;text-align:center;color:var(--red);padding:48px;">Error loading posts.</div>';
   }
+}
+
+function renderSocialCard(p) {
+  const id = p._id;
+  const status = p.publishStatus || 'pending';
+  const thumb = p.assets && p.assets[0] ? p.assets[0].url : null;
+  const thumbHtml = thumb
+    ? `<img class="rc-thumb" src="${thumb}" loading="lazy" onerror="this.style.display='none'">`
+    : '<div class="rc-thumb-placeholder">🪨</div>';
+  const date = p.createdAt ? new Date(p.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
+  const caption = (p.caption || '').substring(0, 120) + ((p.caption || '').length > 120 ? '…' : '');
+  const plats = p.platforms || { fb: true, ig: true, yt: false };
+  const platHtml = ['fb','ig','yt'].map(k =>
+    `<button class="rc-plat ${plats[k] ? 'on' : 'off'}" onclick="togglePostPlatform('${id}','${k}',this)">${k.toUpperCase()}</button>`
+  ).join('');
+  const isDone = status === 'published' || status === 'rejected';
+  const approveDis = isDone || status === 'approved' ? ' disabled' : '';
+  const rejectDis  = isDone ? ' disabled' : '';
+  return `<div class="rc-card" id="rc-card-${id}">` +
+    `<div class="rc-thumb-wrap">${thumbHtml}` +
+      `<span class="rc-status-badge rc-status-${status}">${status}</span>` +
+    '</div>' +
+    '<div class="rc-body">' +
+      '<div class="rc-meta">' +
+        `<span class="rc-theme-badge">${p.theme || 'general'}</span>` +
+        `<span class="rc-job">${p.jobType || ''}</span>` +
+        `<span class="rc-date">${date}</span>` +
+      '</div>' +
+      `<div class="rc-caption">${caption || '<em style="color:var(--tm)">No caption</em>'}</div>` +
+      `<div class="rc-plats"><span class="rc-plat-label">Post to:</span>${platHtml}</div>` +
+      '<div class="rc-actions">' +
+        `<button class="rc-btn rc-btn-approve"${approveDis} onclick="queueAction('${id}','approve')">Approve</button>` +
+        `<button class="rc-btn rc-btn-reject"${rejectDis} onclick="queueAction('${id}','reject')">Reject</button>` +
+      '</div>' +
+    '</div>' +
+  '</div>';
+}
+async function queueAction(id, action) {
+  try {
+    const r = await fetch('/api/rockcast-queue', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, action })
+    });
+    if (r.ok) loadSocial();
+  } catch(e) { console.error('queueAction failed', e); }
+}
+
+async function togglePostPlatform(id, key, btn) {
+  const card = document.getElementById('rc-card-' + id);
+  const platBtns = card.querySelectorAll('.rc-plat');
+  const platforms = {};
+  platBtns.forEach(b => {
+    const k = b.textContent.toLowerCase();
+    platforms[k] = b === btn ? !btn.classList.contains('on') : b.classList.contains('on');
+  });
+  btn.classList.toggle('on');
+  btn.classList.toggle('off');
+  try {
+    await fetch('/api/rockcast-queue', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, action: 'update', platforms })
+    });
+  } catch(e) { console.error('togglePostPlatform failed', e); }
+}
+
+// ── RockCast Settings ────────────────────────────────────────────────────────
+
+let rcSettings = { platforms: { fb: true, ig: true, yt: false }, postsPerDay: 1, preferredTimes: ['09:00'], activeDays: 'mon-sat', autoPublish: false };
+
+async function loadRockCastSettings() {
+  try {
+    const r = await fetch('/api/rockcast-settings');
+    const d = await r.json();
+    rcSettings = d;
+    applyRcSettingsToUI(d);
+  } catch(e) { console.error('loadRockCastSettings failed', e); }
+}
+
+function applyRcSettingsToUI(s) {
+  // Platforms
+  document.getElementById('rc-plat-fb').checked = !!s.platforms?.fb;
+  document.getElementById('rc-plat-ig').checked = !!s.platforms?.ig;
+  document.getElementById('rc-plat-yt').checked = !!s.platforms?.yt;
+  // Posts per day
+  document.querySelectorAll('#rc-ppd-seg .rc-seg-btn').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.textContent) === s.postsPerDay);
+  });
+  // Preferred times
+  document.querySelectorAll('#rc-times-grid .rc-time-btn').forEach(btn => {
+    const t = btn.getAttribute('onclick').match(/'([\d:]+)'/)?.[1];
+    btn.classList.toggle('active', s.preferredTimes?.includes(t));
+  });
+  // Active days
+  document.querySelectorAll('#rc-days-seg .rc-seg-btn').forEach(btn => {
+    const m = btn.getAttribute('onclick').match(/'days','([^']+)'/);
+    btn.classList.toggle('active', m && m[1] === s.activeDays);
+  });
+  // Auto-publish
+  document.getElementById('rc-auto-publish').checked = !!s.autoPublish;
+}
+
+function toggleRcPlatform() {
+  rcSettings.platforms = {
+    fb: document.getElementById('rc-plat-fb').checked,
+    ig: document.getElementById('rc-plat-ig').checked,
+    yt: document.getElementById('rc-plat-yt').checked,
+  };
+}
+
+function setRcSeg(type, val, btn) {
+  const segId = type === 'ppd' ? 'rc-ppd-seg' : 'rc-days-seg';
+  document.querySelectorAll('#' + segId + ' .rc-seg-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (type === 'ppd') rcSettings.postsPerDay = val;
+  else rcSettings.activeDays = val;
+}
+
+function toggleRcTime(time, btn) {
+  btn.classList.toggle('active');
+  const times = [];
+  document.querySelectorAll('#rc-times-grid .rc-time-btn.active').forEach(b => {
+    const t = b.getAttribute('onclick').match(/'([\d:]+)'/)?.[1];
+    if (t) times.push(t);
+  });
+  rcSettings.preferredTimes = times.length ? times : ['09:00'];
+}
+
+function toggleRcAutoPublish() {
+  rcSettings.autoPublish = document.getElementById('rc-auto-publish').checked;
+}
+
+async function saveRockCastSettings() {
+  try {
+    const r = await fetch('/api/rockcast-settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(rcSettings)
+    });
+    if (r.ok) {
+      const msg = document.getElementById('rc-saved-msg');
+      msg.style.opacity = '1';
+      setTimeout(() => msg.style.opacity = '0', 2500);
+    }
+  } catch(e) { console.error('saveRockCastSettings failed', e); }
 }
 
 async function loadOps() {

@@ -155,6 +155,9 @@ exports.handler = async (event) => {
       theme,
       bufferResult,
       status: bufferResult.skipped ? 'caption_only' : 'scheduled',
+      publishStatus: 'pending',
+      platforms: { fb: true, ig: true, yt: false },
+      publishedAt: null,
       uploadedAt: new Date(uploadedAt),
       createdAt: new Date(),
       updatedAt: new Date()

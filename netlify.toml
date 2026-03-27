@@ -13,3 +13,6 @@
 
 [functions."rockbrief-watchdog"]
   schedule = "30 12 * * *"
+
+[functions."rockcast-publish"]
+  schedule = "0 * * * *"

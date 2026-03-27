@@ -2,7 +2,7 @@
 // RockBrief Intelligence Dashboard — data API
 // ?type=brief    → latest doc from daily_briefs
 // ?type=metrics  → revenue today, open quotes, posts today, GSC clicks
-// ?type=social   → recent posts from social_posts
+// ?type=social   → recent posts from rockcast_posts
 // ?type=ops      → quote log + delivery count from quote_log + delivery_schedule
 // ?type=env      → which env vars are set (values never exposed)
 
@@ -68,9 +68,9 @@ exports.handler = async (event) => {
           status: { $in: ['sent', 'pending', 'draft'] }
         }),
 
-        // Posts today: scheduled or posted today
-        db.collection('social_posts').countDocuments({
-          scheduledDate: { $gte: todayStart }
+        // Posts today: created today from rockcast pipeline
+        db.collection('rockcast_posts').countDocuments({
+          createdAt: { $gte: todayStart }
         }),
       ]);
 
@@ -88,11 +88,11 @@ exports.handler = async (event) => {
 
     // ── SOCIAL PIPELINE ───────────────────────────────────────────────
     if (type === 'social') {
-      const posts = await db.collection('social_posts')
+      const posts = await db.collection('rockcast_posts')
         .find({})
-        .sort({ scheduledDate: -1 })
+        .sort({ createdAt: -1 })
         .limit(50)
-        .project({ caption: 1, theme: 1, status: 1, scheduledDate: 1, fb: 1, ig: 1, gbp: 1 })
+        .project({ caption: 1, theme: 1, publishStatus: 1, createdAt: 1, assets: 1, jobType: 1, platforms: 1, publishedAt: 1 })
         .toArray();
       return { statusCode: 200, headers, body: JSON.stringify({ posts }) };
     }
