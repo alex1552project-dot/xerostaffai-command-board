@@ -255,6 +255,8 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
 .rc-btn-approve:hover{opacity:0.88;}
 .rc-btn-reject{background:var(--surface2);color:var(--ts);}
 .rc-btn-reject:hover{background:var(--rbg);color:var(--red);}
+.rc-btn-delete{flex:0 0 auto;padding:8px 10px;background:var(--surface2);color:var(--tm);}
+.rc-btn-delete:hover{background:var(--rbg);color:var(--red);}
 .rc-btn:disabled{opacity:0.4;cursor:not-allowed;}
 /* ── RockCast Settings section ── */
 .rc-settings{background:var(--white);border:0.5px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-top:2rem;}
@@ -284,9 +286,14 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
 .rc-save-btn{padding:10px 24px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif;}
 .rc-save-btn:hover{opacity:0.88;}
 .rc-saved-msg{font-size:11px;color:var(--green);font-weight:600;opacity:0;transition:opacity 0.3s;}
+.rc-plat-schedule-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.rc-plat-sched-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:14px 16px;}
+.rc-plat-sched-hdr{display:flex;align-items:center;justify-content:space-between;}
+.rc-plat-sched-body{}
 @media(max-width:768px){
   .social-grid{grid-template-columns:1fr;}
   .rc-plat-toggles{flex-direction:column;}
+  .rc-plat-schedule-grid{grid-template-columns:1fr;}
 }
 
 </style>
@@ -427,28 +434,6 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
       </div>
       <div class="rc-settings-body">
 
-        <!-- Platforms -->
-        <div class="rc-field">
-          <div class="rc-field-label">Platforms</div>
-          <div class="rc-plat-toggles">
-            <label class="rc-plat-toggle">
-              <input type="checkbox" id="rc-plat-fb" onchange="toggleRcPlatform()">
-              <span class="rc-toggle-track"></span>
-              <span class="rc-plat-toggle-name">Facebook</span>
-            </label>
-            <label class="rc-plat-toggle">
-              <input type="checkbox" id="rc-plat-ig" onchange="toggleRcPlatform()">
-              <span class="rc-toggle-track"></span>
-              <span class="rc-plat-toggle-name">Instagram</span>
-            </label>
-            <label class="rc-plat-toggle">
-              <input type="checkbox" id="rc-plat-yt" onchange="toggleRcPlatform()">
-              <span class="rc-toggle-track"></span>
-              <span class="rc-plat-toggle-name">YouTube</span>
-            </label>
-          </div>
-        </div>
-
         <!-- Posts Per Day -->
         <div class="rc-field">
           <div class="rc-field-label">Posts Per Day</div>
@@ -459,32 +444,113 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
           </div>
         </div>
 
-        <!-- Preferred Times (CST) -->
+        <!-- Per-Platform Schedules -->
         <div class="rc-field">
-          <div class="rc-field-label">Preferred Post Times (CST)</div>
-          <div class="rc-time-grid" id="rc-times-grid">
-            <button class="rc-time-btn" onclick="toggleRcTime('07:00',this)">7 AM</button>
-            <button class="rc-time-btn" onclick="toggleRcTime('08:00',this)">8 AM</button>
-            <button class="rc-time-btn" onclick="toggleRcTime('09:00',this)">9 AM</button>
-            <button class="rc-time-btn" onclick="toggleRcTime('10:00',this)">10 AM</button>
-            <button class="rc-time-btn" onclick="toggleRcTime('11:00',this)">11 AM</button>
-            <button class="rc-time-btn" onclick="toggleRcTime('12:00',this)">12 PM</button>
-            <button class="rc-time-btn" onclick="toggleRcTime('13:00',this)">1 PM</button>
-            <button class="rc-time-btn" onclick="toggleRcTime('14:00',this)">2 PM</button>
-            <button class="rc-time-btn" onclick="toggleRcTime('15:00',this)">3 PM</button>
-            <button class="rc-time-btn" onclick="toggleRcTime('16:00',this)">4 PM</button>
-            <button class="rc-time-btn" onclick="toggleRcTime('17:00',this)">5 PM</button>
-            <button class="rc-time-btn" onclick="toggleRcTime('18:00',this)">6 PM</button>
-          </div>
-        </div>
+          <div class="rc-field-label">Platform Schedules (CST)</div>
+          <div class="rc-plat-schedule-grid">
 
-        <!-- Active Days -->
-        <div class="rc-field">
-          <div class="rc-field-label">Active Days</div>
-          <div class="rc-seg" id="rc-days-seg">
-            <button class="rc-seg-btn" onclick="setRcSeg('days','mon-fri',this)">Mon–Fri</button>
-            <button class="rc-seg-btn" onclick="setRcSeg('days','mon-sat',this)">Mon–Sat</button>
-            <button class="rc-seg-btn" onclick="setRcSeg('days','mon-sun',this)">Every Day</button>
+            <!-- Facebook -->
+            <div class="rc-plat-sched-card">
+              <div class="rc-plat-sched-hdr">
+                <label class="rc-plat-toggle" style="margin:0;">
+                  <input type="checkbox" id="rc-plat-fb" onchange="toggleRcPlatform()">
+                  <span class="rc-toggle-track"></span>
+                  <span class="rc-plat-toggle-name" style="font-size:13px;font-weight:700;color:var(--tp);">Facebook</span>
+                </label>
+              </div>
+              <div class="rc-plat-sched-body" id="rc-sched-fb">
+                <div class="rc-field-label" style="margin-top:10px;">Post Times</div>
+                <div class="rc-time-grid" id="rc-times-fb">
+                  <button class="rc-time-btn" onclick="toggleRcTime('fb','07:00',this)">7 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('fb','08:00',this)">8 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('fb','09:00',this)">9 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('fb','10:00',this)">10 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('fb','11:00',this)">11 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('fb','12:00',this)">12 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('fb','13:00',this)">1 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('fb','14:00',this)">2 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('fb','15:00',this)">3 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('fb','16:00',this)">4 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('fb','17:00',this)">5 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('fb','18:00',this)">6 PM</button>
+                </div>
+                <div class="rc-field-label" style="margin-top:10px;">Active Days</div>
+                <div class="rc-seg" id="rc-days-fb">
+                  <button class="rc-seg-btn" onclick="setRcDays('fb','mon-fri',this)">Mon–Fri</button>
+                  <button class="rc-seg-btn" onclick="setRcDays('fb','mon-sat',this)">Mon–Sat</button>
+                  <button class="rc-seg-btn" onclick="setRcDays('fb','mon-sun',this)">Every Day</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Instagram -->
+            <div class="rc-plat-sched-card">
+              <div class="rc-plat-sched-hdr">
+                <label class="rc-plat-toggle" style="margin:0;">
+                  <input type="checkbox" id="rc-plat-ig" onchange="toggleRcPlatform()">
+                  <span class="rc-toggle-track"></span>
+                  <span class="rc-plat-toggle-name" style="font-size:13px;font-weight:700;color:var(--tp);">Instagram</span>
+                </label>
+              </div>
+              <div class="rc-plat-sched-body" id="rc-sched-ig">
+                <div class="rc-field-label" style="margin-top:10px;">Post Times</div>
+                <div class="rc-time-grid" id="rc-times-ig">
+                  <button class="rc-time-btn" onclick="toggleRcTime('ig','07:00',this)">7 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('ig','08:00',this)">8 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('ig','09:00',this)">9 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('ig','10:00',this)">10 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('ig','11:00',this)">11 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('ig','12:00',this)">12 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('ig','13:00',this)">1 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('ig','14:00',this)">2 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('ig','15:00',this)">3 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('ig','16:00',this)">4 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('ig','17:00',this)">5 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('ig','18:00',this)">6 PM</button>
+                </div>
+                <div class="rc-field-label" style="margin-top:10px;">Active Days</div>
+                <div class="rc-seg" id="rc-days-ig">
+                  <button class="rc-seg-btn" onclick="setRcDays('ig','mon-fri',this)">Mon–Fri</button>
+                  <button class="rc-seg-btn" onclick="setRcDays('ig','mon-sat',this)">Mon–Sat</button>
+                  <button class="rc-seg-btn" onclick="setRcDays('ig','mon-sun',this)">Every Day</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- YouTube -->
+            <div class="rc-plat-sched-card">
+              <div class="rc-plat-sched-hdr">
+                <label class="rc-plat-toggle" style="margin:0;">
+                  <input type="checkbox" id="rc-plat-yt" onchange="toggleRcPlatform()">
+                  <span class="rc-toggle-track"></span>
+                  <span class="rc-plat-toggle-name" style="font-size:13px;font-weight:700;color:var(--tp);">YouTube</span>
+                </label>
+              </div>
+              <div class="rc-plat-sched-body" id="rc-sched-yt">
+                <div class="rc-field-label" style="margin-top:10px;">Post Times</div>
+                <div class="rc-time-grid" id="rc-times-yt">
+                  <button class="rc-time-btn" onclick="toggleRcTime('yt','07:00',this)">7 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('yt','08:00',this)">8 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('yt','09:00',this)">9 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('yt','10:00',this)">10 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('yt','11:00',this)">11 AM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('yt','12:00',this)">12 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('yt','13:00',this)">1 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('yt','14:00',this)">2 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('yt','15:00',this)">3 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('yt','16:00',this)">4 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('yt','17:00',this)">5 PM</button>
+                  <button class="rc-time-btn" onclick="toggleRcTime('yt','18:00',this)">6 PM</button>
+                </div>
+                <div class="rc-field-label" style="margin-top:10px;">Active Days</div>
+                <div class="rc-seg" id="rc-days-yt">
+                  <button class="rc-seg-btn" onclick="setRcDays('yt','mon-fri',this)">Mon–Fri</button>
+                  <button class="rc-seg-btn" onclick="setRcDays('yt','mon-sat',this)">Mon–Sat</button>
+                  <button class="rc-seg-btn" onclick="setRcDays('yt','mon-sun',this)">Every Day</button>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -626,6 +692,7 @@ function renderSocialCard(p) {
       '<div class="rc-actions">' +
         `<button class="rc-btn rc-btn-approve"${approveDis} onclick="queueAction('${id}','approve')">Approve</button>` +
         `<button class="rc-btn rc-btn-reject"${rejectDis} onclick="queueAction('${id}','reject')">Reject</button>` +
+        `<button class="rc-btn rc-btn-delete" onclick="deletePost('${id}')" title="Delete post">🗑</button>` +
       '</div>' +
     '</div>' +
   '</div>';
@@ -689,7 +756,18 @@ function closeLightbox(e) {
 
 function lbKeyHandler(e) { if (e.key === 'Escape') closeLightbox({ target: document.getElementById('lb') }); }
 
-let rcSettings = { platforms: { fb: true, ig: true, yt: false }, postsPerDay: 1, preferredTimes: ['09:00'], activeDays: 'mon-sat', autoPublish: false };
+const RC_PLATS = ['fb','ig','yt'];
+const DEFAULT_SCHED = {
+  fb: { times: ['09:00'], days: 'mon-sat' },
+  ig: { times: ['12:00'], days: 'mon-sat' },
+  yt: { times: ['10:00'], days: 'mon-fri' },
+};
+let rcSettings = {
+  platforms: { fb: true, ig: true, yt: false },
+  postsPerDay: 1,
+  autoPublish: false,
+  platformSchedules: JSON.parse(JSON.stringify(DEFAULT_SCHED)),
+};
 
 async function loadRockCastSettings() {
   try {
@@ -701,56 +779,86 @@ async function loadRockCastSettings() {
 }
 
 function applyRcSettingsToUI(s) {
-  // Platforms
-  document.getElementById('rc-plat-fb').checked = !!s.platforms?.fb;
-  document.getElementById('rc-plat-ig').checked = !!s.platforms?.ig;
-  document.getElementById('rc-plat-yt').checked = !!s.platforms?.yt;
+  // Platform toggles
+  RC_PLATS.forEach(k => {
+    const el = document.getElementById('rc-plat-' + k);
+    if (el) el.checked = !!s.platforms?.[k];
+  });
   // Posts per day
   document.querySelectorAll('#rc-ppd-seg .rc-seg-btn').forEach(btn => {
     btn.classList.toggle('active', parseInt(btn.textContent) === s.postsPerDay);
   });
-  // Preferred times
-  document.querySelectorAll('#rc-times-grid .rc-time-btn').forEach(btn => {
-    const t = btn.getAttribute('onclick').match(/'([\d:]+)'/)?.[1];
-    btn.classList.toggle('active', s.preferredTimes?.includes(t));
-  });
-  // Active days
-  document.querySelectorAll('#rc-days-seg .rc-seg-btn').forEach(btn => {
-    const m = btn.getAttribute('onclick').match(/'days','([^']+)'/);
-    btn.classList.toggle('active', m && m[1] === s.activeDays);
+  // Per-platform times + days
+  RC_PLATS.forEach(k => {
+    const sched = s.platformSchedules?.[k] || DEFAULT_SCHED[k];
+    document.querySelectorAll(`#rc-times-${k} .rc-time-btn`).forEach(btn => {
+      const t = btn.getAttribute('onclick').match(/'([\d:]+)'/)?.[1];
+      btn.classList.toggle('active', sched.times?.includes(t));
+    });
+    document.querySelectorAll(`#rc-days-${k} .rc-seg-btn`).forEach(btn => {
+      const m = btn.getAttribute('onclick').match(/'[a-z]+','([^']+)'/);
+      btn.classList.toggle('active', m && m[1] === sched.days);
+    });
   });
   // Auto-publish
   document.getElementById('rc-auto-publish').checked = !!s.autoPublish;
 }
 
 function toggleRcPlatform() {
-  rcSettings.platforms = {
-    fb: document.getElementById('rc-plat-fb').checked,
-    ig: document.getElementById('rc-plat-ig').checked,
-    yt: document.getElementById('rc-plat-yt').checked,
-  };
+  RC_PLATS.forEach(k => {
+    const el = document.getElementById('rc-plat-' + k);
+    if (el) rcSettings.platforms[k] = el.checked;
+  });
 }
 
 function setRcSeg(type, val, btn) {
-  const segId = type === 'ppd' ? 'rc-ppd-seg' : 'rc-days-seg';
-  document.querySelectorAll('#' + segId + ' .rc-seg-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#rc-ppd-seg .rc-seg-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  if (type === 'ppd') rcSettings.postsPerDay = val;
-  else rcSettings.activeDays = val;
+  rcSettings.postsPerDay = val;
 }
 
-function toggleRcTime(time, btn) {
+function setRcDays(plat, val, btn) {
+  document.querySelectorAll(`#rc-days-${plat} .rc-seg-btn`).forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (!rcSettings.platformSchedules) rcSettings.platformSchedules = JSON.parse(JSON.stringify(DEFAULT_SCHED));
+  if (!rcSettings.platformSchedules[plat]) rcSettings.platformSchedules[plat] = {};
+  rcSettings.platformSchedules[plat].days = val;
+}
+
+function toggleRcTime(plat, time, btn) {
   btn.classList.toggle('active');
   const times = [];
-  document.querySelectorAll('#rc-times-grid .rc-time-btn.active').forEach(b => {
+  document.querySelectorAll(`#rc-times-${plat} .rc-time-btn.active`).forEach(b => {
     const t = b.getAttribute('onclick').match(/'([\d:]+)'/)?.[1];
     if (t) times.push(t);
   });
-  rcSettings.preferredTimes = times.length ? times : ['09:00'];
+  if (!rcSettings.platformSchedules) rcSettings.platformSchedules = JSON.parse(JSON.stringify(DEFAULT_SCHED));
+  if (!rcSettings.platformSchedules[plat]) rcSettings.platformSchedules[plat] = {};
+  rcSettings.platformSchedules[plat].times = times.length ? times : ['09:00'];
 }
 
 function toggleRcAutoPublish() {
   rcSettings.autoPublish = document.getElementById('rc-auto-publish').checked;
+}
+
+async function deletePost(id) {
+  if (!confirm('Delete this post permanently?')) return;
+  try {
+    const r = await fetch('/api/rockcast-queue', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, action: 'delete' })
+    });
+    if (r.ok) {
+      const card = document.getElementById('rc-card-' + id);
+      if (card) { card.style.opacity = '0'; card.style.transition = 'opacity 0.25s'; setTimeout(() => card.remove(), 250); }
+      // Update count
+      const grid = document.getElementById('social-grid');
+      const remaining = grid.querySelectorAll('.rc-card').length;
+      const countEl = document.getElementById('social-count');
+      if (countEl) countEl.textContent = remaining + ' posts';
+    }
+  } catch(e) { console.error('deletePost failed', e); }
 }
 
 async function saveRockCastSettings() {

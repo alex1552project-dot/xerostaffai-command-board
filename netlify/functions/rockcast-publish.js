@@ -91,10 +91,13 @@ const handler = async () => {
 
     // 1. Load settings
     const settings = await db.collection('rockcast_settings').findOne({});
-    const autoPublish  = settings?.autoPublish  ?? false;
-    const preferredTimes = settings?.preferredTimes ?? ['09:00'];
-    const activeDays   = settings?.activeDays   ?? 'mon-sat';
-    const platforms    = settings?.platforms    ?? { fb: true, ig: true, yt: false };
+    const autoPublish = settings?.autoPublish ?? false;
+    const enabledPlatforms = settings?.platforms ?? { fb: true, ig: true, yt: false };
+    const platformSchedules = settings?.platformSchedules ?? {
+      fb: { times: ['09:00'], days: 'mon-sat' },
+      ig: { times: ['12:00'], days: 'mon-sat' },
+      yt: { times: ['10:00'], days: 'mon-fri' },
+    };
 
     // 2. Guard: autoPublish must be on
     if (!autoPublish) {
@@ -102,24 +105,23 @@ const handler = async () => {
       return { statusCode: 200, body: 'autoPublish off' };
     }
 
-    // 3. Guard: must be an active day
+    // 3. Determine which platforms are due right now (active day + near scheduled time)
     const todayDow = new Date().getDay();
-    const active = activeDaysSet(activeDays);
-    if (!active.has(todayDow)) {
-      console.log('[rockcast-publish] not an active day — skipping');
-      return { statusCode: 200, body: 'not active day' };
+    const duePlatforms = {};
+    for (const plat of ['fb', 'ig', 'yt']) {
+      if (!enabledPlatforms[plat]) continue;
+      const sched = platformSchedules[plat] || { times: ['09:00'], days: 'mon-sat' };
+      const activeToday = activeDaysSet(sched.days).has(todayDow);
+      const nearTime = isNearScheduledTime(sched.times);
+      if (activeToday && nearTime) duePlatforms[plat] = true;
     }
 
-    // 4. Guard: must be near a scheduled time slot
-    if (!isNearScheduledTime(preferredTimes)) {
-      console.log('[rockcast-publish] not near a scheduled time — skipping');
-      return { statusCode: 200, body: 'not near scheduled time' };
+    if (Object.keys(duePlatforms).length === 0) {
+      console.log('[rockcast-publish] no platforms due right now — skipping');
+      return { statusCode: 200, body: 'no platforms due' };
     }
 
-    // 5. Find next approved post not yet published today
-    const todayStart = new Date();
-    todayStart.setHours(0, 0, 0, 0);
-
+    // 4. Find next approved post
     const post = await db.collection('rockcast_posts').findOne({
       publishStatus: 'approved',
       publishedAt: null,
@@ -130,13 +132,12 @@ const handler = async () => {
       return { statusCode: 200, body: 'no posts' };
     }
 
-    // 6. Merge per-post platform overrides with settings defaults
-    const postPlatforms = post.platforms || platforms;
-
+    // 5. Intersect due platforms with per-post platform overrides
+    const postPlatforms = post.platforms || enabledPlatforms;
     const publishResults = {};
 
-    // 7. Attempt each enabled platform
-    if (postPlatforms.fb) {
+    // 6. Attempt each due + enabled platform
+    if (duePlatforms.fb && postPlatforms.fb) {
       try {
         const result = await publishToFacebook(post);
         publishResults.fb = { success: true, result };
@@ -145,7 +146,7 @@ const handler = async () => {
       }
     }
 
-    if (postPlatforms.ig) {
+    if (duePlatforms.ig && postPlatforms.ig) {
       try {
         const result = await publishToInstagram(post);
         publishResults.ig = { success: true, result };
@@ -154,7 +155,7 @@ const handler = async () => {
       }
     }
 
-    if (postPlatforms.yt) {
+    if (duePlatforms.yt && postPlatforms.yt) {
       try {
         const result = await publishToYouTube(post);
         publishResults.yt = { success: true, result };

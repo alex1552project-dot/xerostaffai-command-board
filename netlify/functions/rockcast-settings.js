@@ -21,9 +21,12 @@ const headers = {
 const DEFAULTS = {
   platforms: { fb: true, ig: true, yt: false },
   postsPerDay: 1,
-  preferredTimes: ['09:00'],
-  activeDays: 'mon-sat',
   autoPublish: false,
+  platformSchedules: {
+    fb: { times: ['09:00'], days: 'mon-sat' },
+    ig: { times: ['12:00'], days: 'mon-sat' },
+    yt: { times: ['10:00'], days: 'mon-fri' },
+  },
 };
 
 exports.handler = async (event) => {

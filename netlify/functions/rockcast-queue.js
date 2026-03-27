@@ -1,6 +1,6 @@
 // rockcast-queue.js
-// POST { id, action: 'approve'|'reject'|'update', platforms?: {fb,ig,yt} }
-// Mutates publishStatus or platforms on a rockcast_posts document
+// POST { id, action: 'approve'|'reject'|'update'|'delete', platforms?: {fb,ig,yt} }
+// Mutates publishStatus or platforms on a rockcast_posts document, or deletes it
 
 const { MongoClient, ObjectId } = require('mongodb');
 
@@ -44,6 +44,12 @@ exports.handler = async (event) => {
       update = { $set: { publishStatus: 'rejected', updatedAt: new Date() } };
     } else if (action === 'update' && platforms) {
       update = { $set: { platforms, updatedAt: new Date() } };
+    } else if (action === 'delete') {
+      const result = await col.deleteOne({ _id });
+      if (result.deletedCount === 0) {
+        return { statusCode: 404, headers, body: JSON.stringify({ error: 'Post not found' }) };
+      }
+      return { statusCode: 200, headers, body: JSON.stringify({ success: true, deleted: true }) };
     } else {
       return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid action or missing platforms for update' }) };
     }
