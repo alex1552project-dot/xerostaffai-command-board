@@ -264,12 +264,6 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
 .rc-settings-body{padding:20px 18px;display:grid;gap:20px;}
 .rc-field{display:flex;flex-direction:column;gap:6px;}
 .rc-field-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--tm);}
-.rc-seg{display:flex;gap:4px;flex-wrap:wrap;}
-.rc-seg-btn{background:var(--surface2);color:var(--ts);border:0.5px solid var(--border);border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;font-family:'Barlow',sans-serif;}
-.rc-seg-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
-.rc-time-grid{display:flex;gap:6px;flex-wrap:wrap;}
-.rc-time-btn{background:var(--surface2);color:var(--ts);border:0.5px solid var(--border);border-radius:7px;padding:6px 13px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;font-family:'Barlow',sans-serif;}
-.rc-time-btn.active{background:var(--orange);color:#fff;border-color:var(--orange);}
 .rc-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--surface);border-radius:var(--r);}
 .rc-toggle-label{font-size:13px;font-weight:500;color:var(--tp);}
 .rc-toggle-sub{font-size:11px;color:var(--tm);}
@@ -286,10 +280,22 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
 .rc-save-btn{padding:10px 24px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif;}
 .rc-save-btn:hover{opacity:0.88;}
 .rc-saved-msg{font-size:11px;color:var(--green);font-weight:600;opacity:0;transition:opacity 0.3s;}
-.rc-plat-schedule-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-.rc-plat-sched-card{background:var(--surface);border:0.5px solid var(--border);border-radius:var(--r);padding:14px 16px;}
-.rc-plat-sched-hdr{display:flex;align-items:center;justify-content:space-between;}
-.rc-plat-sched-body{}
+.rc-plat-schedule-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.rc-plat-sched-card{background:var(--white);border:0.5px solid var(--border);border-radius:var(--rl);overflow:hidden;}
+.rc-plat-sched-hdr{display:flex;align-items:center;justify-content:space-between;padding:13px 16px 12px;border-bottom:0.5px solid var(--border);background:var(--surface);}
+.rc-plat-sched-name{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:var(--tp);}
+.rc-plat-icon{font-size:16px;line-height:1;}
+.rc-plat-sched-body{padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+.rc-sub-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--tm);}
+.rc-time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;}
+.rc-time-btn{background:var(--surface);color:var(--ts);border:0.5px solid var(--border);border-radius:6px;padding:6px 4px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;text-align:center;font-family:'Barlow',sans-serif;}
+.rc-time-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.rc-seg{display:flex;gap:4px;}
+.rc-seg-btn{flex:1;background:var(--surface);color:var(--ts);border:0.5px solid var(--border);border-radius:7px;padding:7px 4px;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;text-align:center;font-family:'Barlow',sans-serif;}
+.rc-seg-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.rc-ppd-seg{display:flex;gap:6px;width:160px;}
+.rc-ppd-btn{flex:1;background:var(--surface);color:var(--ts);border:0.5px solid var(--border);border-radius:8px;padding:9px 4px;font-size:14px;font-weight:700;cursor:pointer;transition:all 0.15s;text-align:center;font-family:'Barlow',sans-serif;}
+.rc-ppd-btn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
 @media(max-width:768px){
   .social-grid{grid-template-columns:1fr;}
   .rc-plat-toggles{flex-direction:column;}
@@ -437,29 +443,32 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
         <!-- Posts Per Day -->
         <div class="rc-field">
           <div class="rc-field-label">Posts Per Day</div>
-          <div class="rc-seg" id="rc-ppd-seg">
-            <button class="rc-seg-btn" onclick="setRcSeg('ppd',1,this)">1</button>
-            <button class="rc-seg-btn" onclick="setRcSeg('ppd',2,this)">2</button>
-            <button class="rc-seg-btn" onclick="setRcSeg('ppd',3,this)">3</button>
+          <div class="rc-ppd-seg" id="rc-ppd-seg">
+            <button class="rc-ppd-btn" onclick="setRcSeg('ppd',1,this)">1</button>
+            <button class="rc-ppd-btn" onclick="setRcSeg('ppd',2,this)">2</button>
+            <button class="rc-ppd-btn" onclick="setRcSeg('ppd',3,this)">3</button>
           </div>
         </div>
 
         <!-- Per-Platform Schedules -->
         <div class="rc-field">
-          <div class="rc-field-label">Platform Schedules (CST)</div>
+          <div class="rc-field-label">Platform Schedules</div>
           <div class="rc-plat-schedule-grid">
-
             <!-- Facebook -->
             <div class="rc-plat-sched-card">
               <div class="rc-plat-sched-hdr">
-                <label class="rc-plat-toggle" style="margin:0;">
+                <div class="rc-plat-sched-name">
+                  <span class="rc-plat-icon">🟦</span>
+                  <span>Facebook</span>
+                </div>
+                <label class="rc-toggle">
                   <input type="checkbox" id="rc-plat-fb" onchange="toggleRcPlatform()">
                   <span class="rc-toggle-track"></span>
-                  <span class="rc-plat-toggle-name" style="font-size:13px;font-weight:700;color:var(--tp);">Facebook</span>
+                  <span class="rc-toggle-thumb"></span>
                 </label>
               </div>
-              <div class="rc-plat-sched-body" id="rc-sched-fb">
-                <div class="rc-field-label" style="margin-top:10px;">Post Times</div>
+              <div class="rc-plat-sched-body">
+                <div class="rc-sub-label">Post Times (CST)</div>
                 <div class="rc-time-grid" id="rc-times-fb">
                   <button class="rc-time-btn" onclick="toggleRcTime('fb','07:00',this)">7 AM</button>
                   <button class="rc-time-btn" onclick="toggleRcTime('fb','08:00',this)">8 AM</button>
@@ -474,7 +483,7 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
                   <button class="rc-time-btn" onclick="toggleRcTime('fb','17:00',this)">5 PM</button>
                   <button class="rc-time-btn" onclick="toggleRcTime('fb','18:00',this)">6 PM</button>
                 </div>
-                <div class="rc-field-label" style="margin-top:10px;">Active Days</div>
+                <div class="rc-sub-label">Active Days</div>
                 <div class="rc-seg" id="rc-days-fb">
                   <button class="rc-seg-btn" onclick="setRcDays('fb','mon-fri',this)">Mon–Fri</button>
                   <button class="rc-seg-btn" onclick="setRcDays('fb','mon-sat',this)">Mon–Sat</button>
@@ -486,14 +495,18 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
             <!-- Instagram -->
             <div class="rc-plat-sched-card">
               <div class="rc-plat-sched-hdr">
-                <label class="rc-plat-toggle" style="margin:0;">
+                <div class="rc-plat-sched-name">
+                  <span class="rc-plat-icon">📸</span>
+                  <span>Instagram</span>
+                </div>
+                <label class="rc-toggle">
                   <input type="checkbox" id="rc-plat-ig" onchange="toggleRcPlatform()">
                   <span class="rc-toggle-track"></span>
-                  <span class="rc-plat-toggle-name" style="font-size:13px;font-weight:700;color:var(--tp);">Instagram</span>
+                  <span class="rc-toggle-thumb"></span>
                 </label>
               </div>
-              <div class="rc-plat-sched-body" id="rc-sched-ig">
-                <div class="rc-field-label" style="margin-top:10px;">Post Times</div>
+              <div class="rc-plat-sched-body">
+                <div class="rc-sub-label">Post Times (CST)</div>
                 <div class="rc-time-grid" id="rc-times-ig">
                   <button class="rc-time-btn" onclick="toggleRcTime('ig','07:00',this)">7 AM</button>
                   <button class="rc-time-btn" onclick="toggleRcTime('ig','08:00',this)">8 AM</button>
@@ -508,7 +521,7 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
                   <button class="rc-time-btn" onclick="toggleRcTime('ig','17:00',this)">5 PM</button>
                   <button class="rc-time-btn" onclick="toggleRcTime('ig','18:00',this)">6 PM</button>
                 </div>
-                <div class="rc-field-label" style="margin-top:10px;">Active Days</div>
+                <div class="rc-sub-label">Active Days</div>
                 <div class="rc-seg" id="rc-days-ig">
                   <button class="rc-seg-btn" onclick="setRcDays('ig','mon-fri',this)">Mon–Fri</button>
                   <button class="rc-seg-btn" onclick="setRcDays('ig','mon-sat',this)">Mon–Sat</button>
@@ -520,14 +533,18 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
             <!-- YouTube -->
             <div class="rc-plat-sched-card">
               <div class="rc-plat-sched-hdr">
-                <label class="rc-plat-toggle" style="margin:0;">
+                <div class="rc-plat-sched-name">
+                  <span class="rc-plat-icon">▶️</span>
+                  <span>YouTube</span>
+                </div>
+                <label class="rc-toggle">
                   <input type="checkbox" id="rc-plat-yt" onchange="toggleRcPlatform()">
                   <span class="rc-toggle-track"></span>
-                  <span class="rc-plat-toggle-name" style="font-size:13px;font-weight:700;color:var(--tp);">YouTube</span>
+                  <span class="rc-toggle-thumb"></span>
                 </label>
               </div>
-              <div class="rc-plat-sched-body" id="rc-sched-yt">
-                <div class="rc-field-label" style="margin-top:10px;">Post Times</div>
+              <div class="rc-plat-sched-body">
+                <div class="rc-sub-label">Post Times (CST)</div>
                 <div class="rc-time-grid" id="rc-times-yt">
                   <button class="rc-time-btn" onclick="toggleRcTime('yt','07:00',this)">7 AM</button>
                   <button class="rc-time-btn" onclick="toggleRcTime('yt','08:00',this)">8 AM</button>
@@ -542,7 +559,7 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
                   <button class="rc-time-btn" onclick="toggleRcTime('yt','17:00',this)">5 PM</button>
                   <button class="rc-time-btn" onclick="toggleRcTime('yt','18:00',this)">6 PM</button>
                 </div>
-                <div class="rc-field-label" style="margin-top:10px;">Active Days</div>
+                <div class="rc-sub-label">Active Days</div>
                 <div class="rc-seg" id="rc-days-yt">
                   <button class="rc-seg-btn" onclick="setRcDays('yt','mon-fri',this)">Mon–Fri</button>
                   <button class="rc-seg-btn" onclick="setRcDays('yt','mon-sat',this)">Mon–Sat</button>
@@ -550,11 +567,10 @@ main{max-width:1200px;margin:0 auto;padding:1.5rem 1.75rem 3rem;}
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
-        <!-- Auto-Publish -->
+                <!-- Auto-Publish -->
         <div class="rc-toggle-row">
           <div>
             <div class="rc-toggle-label">Auto-Publish</div>
@@ -785,7 +801,7 @@ function applyRcSettingsToUI(s) {
     if (el) el.checked = !!s.platforms?.[k];
   });
   // Posts per day
-  document.querySelectorAll('#rc-ppd-seg .rc-seg-btn').forEach(btn => {
+  document.querySelectorAll('#rc-ppd-seg .rc-ppd-btn').forEach(btn => {
     btn.classList.toggle('active', parseInt(btn.textContent) === s.postsPerDay);
   });
   // Per-platform times + days
@@ -812,7 +828,7 @@ function toggleRcPlatform() {
 }
 
 function setRcSeg(type, val, btn) {
-  document.querySelectorAll('#rc-ppd-seg .rc-seg-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#rc-ppd-seg .rc-ppd-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   rcSettings.postsPerDay = val;
 }
